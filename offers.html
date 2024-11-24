@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Lohono Stays | Current Offers</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Layout and Footer Styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .offers-container {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .offer-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .offer-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .offer-card img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .offer-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .offer-card .discount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .offer-card .description {
+            font-size: 1rem;
+            margin: 10px 0;
+            flex-grow: 1;
+            overflow: hidden;
+            color: #000; /* Description color set to black */
+        }
+        .offer-card .valid-until {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        /* Custom Popup Styles */
+        .offerDetail-popup {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 80%;
+        }
+        .offerDetail-popup.active {
+            display: block;
+        }
+        .offerDetail-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .offerDetail-overlay.active {
+            display: block;
+        }
+        .offerDetail-popup img {
+            width: 100%;
+            height: 400px; /* Set image height to 400px */
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .offerDetail-popup .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0; /* Remove margin below header */
+        }
+        .offerDetail-popup .popup-header h2 {
+            margin: 0;
+            color: #0E2E50; /* Title color */
+        }
+        .offerDetail-popup .close-popup {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #000;
+        }
+        .offerDetail-popup .discount-valid-until {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333; /* Combined text color */
+            margin-top: 0; /* Remove margin-top to remove gap between title and discount-valid-until */
+            margin-bottom: 15px; /* Space between discount-valid-until and image */
+        }
+        .offerDetail-popup #offerDetailDescription {
+            color: #000; /* Set description color to black */
+        }
+        
+        .no-offers-message {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the Navbar -->
+    <div id="navbar"></div>
+
+    <div class="content">
+        <div class="container offers-container">
+            <h1 class="text-center">Current Offers</h1><br>
+            <div id="offers-list" class="row">
+                <!-- Offers will be dynamically inserted here -->
+            </div>
+            <div id="no-offers-message" class="no-offers-message" style="display: none;">
+                            <div class="svg-container text-center">
+                                <!-- Reference the SVG file -->
+                                <img src="img/offer_error.svg" alt="No Active Offers Icon" width="600" height="440"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Offer Detail Popup -->
+    <div class="offerDetail-overlay"></div>
+    <div class="offerDetail-popup">
+        <div class="popup-header">
+            <h2 id="offerDetailTitle"></h2>
+            <button class="close-popup">&times;</button>
+        </div>
+        <div id="offerDetailDiscountValidUntil" class="discount-valid-until"></div>
+        <img id="offerDetailImage" src="" alt="Offer Image">
+        <div id="offerDetailDescription"></div>
+    </div>
+
+   
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function(){
+            $('#navbar').load('navbar.html');
+            $('#footer').load('loadFooter.js');
+
+            function formatDate(dateString) {
+                if (!dateString) return "Invalid Date";
+                var date = new Date(dateString); 
+                if (isNaN(date)) return "Invalid Date"; 
+
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                var day = ("0" + date.getDate()).slice(-2);
+                var month = months[date.getMonth()];
+                var year = date.getFullYear();
+                
+                return `${day} ${month} ${year}`;
+            }
+
+            function loadOffers() {
+                $.get("/activeoffers")
+                    .done(function (data) {
+                        var offersList = $("#offers-list");
+                        var noOffersMessage = $("#no-offers-message");
+                        
+                        if (data.length === 0) {
+                            offersList.hide();
+                            noOffersMessage.show();
+                        } else {
+                            offersList.empty();
+                            noOffersMessage.hide();
+
+                            data.forEach(function (offer) {
+                                var offerHTML = `
+                                    <div class="col-md-4">
+                                        <div class="offer-card" data-id="${offer.OfferID}" data-image="${offer.OfferImage}" data-title="${offer.OfferTitle}" data-description="${offer.OfferDescription}" data-discount="${offer.OfferDiscount}" data-valid-until="${offer.ValidUntil}">
+                                            <img src="${offer.OfferImage}" alt="${offer.OfferTitle}">
+                                            <h2>${offer.OfferTitle}</h2>
+                                            <div class="discount">${offer.OfferDiscount}</div>
+                                            <div class="description">${offer.OfferDescription}</div>
+                                            <div class="valid-until">Valid Until: ${formatDate(offer.ValidUntil)}</div>
+                                        </div>
+                                    </div>
+                                `;
+                                offersList.append(offerHTML);
+                            });
+
+                            // Offer Detail event listener
+                            $('.offer-card').on('click', function () {
+                                var image = $(this).data('image');
+                                var title = $(this).data('title');
+                                var description = $(this).data('description');
+                                var discount = $(this).data('discount');
+                                var validUntil = $(this).data('valid-until');
+
+                                $('#offerDetailImage').attr('src', image);
+                                $('#offerDetailTitle').text(title);
+                                $('#offerDetailDescription').text(description);
+                                $('#offerDetailDiscountValidUntil').text(`${discount} | Valid Until: ${formatDate(validUntil)}`);
+
+                                $('.offerDetail-overlay').addClass('active');
+                                $('.offerDetail-popup').addClass('active');
+                            });
+
+                            // Close Popup
+                            $('.close-popup, .offerDetail-overlay').on('click', function () {
+                                $('.offerDetail-overlay').removeClass('active');
+                                $('.offerDetail-popup').removeClass('active');
+                            });
+                        }
+                    })
+                    .fail(function () {
+                        console.error("Failed to fetch offers.");
+                    });
+            }
+
+            loadOffers();
+        });
+    </script>
+    <script src="loadFooter.js"></script>
+</body>
+</html>

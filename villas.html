@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Villa List</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"
+    />
+    <style>
+      body {
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container-fluid {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+      }
+
+      .table th,
+      .table td {
+        padding: 0.5rem;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+
+      .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+        background-color: #d32f2f;
+        color: #fff;
+        font-size: 0.9rem;
+      }
+
+      .btn-toolbar .input-group .btn-secondary {
+        display: none;
+      }
+
+      h3.text-center {
+        margin-bottom: 20px;
+      }
+
+      .btn-toolbar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .house-rules-cell,
+      .other-info-cell {
+        max-width: 200px; /* Increase the width for better visibility */
+        overflow: hidden;
+      }
+
+      .house-rules-cell .house-rules-content,
+      .other-info-cell .other-info-content {
+        max-height: 100px; /* Fixed height for scrollable content */
+        overflow-y: auto;
+        padding-right: 15px; /* Adds space for scrollbar */
+        text-align: left;
+      }
+
+      /* Optional: Add scrollbar styling */
+      .house-rules-cell::-webkit-scrollbar,
+      .other-info-cell::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .house-rules-cell::-webkit-scrollbar-thumb,
+      .other-info-cell::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      .house-rules-cell::-webkit-scrollbar-thumb:hover,
+      .other-info-cell::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      .btn-icon {
+        font-size: 1.1rem;
+        color: #333;
+        cursor: pointer;
+      }
+
+      .btn-icon:hover {
+        color: #0e2e50;
+      }
+
+      /* Sidebar styles */
+      #sidebar {
+        min-width: 250px;
+        max-width: 250px;
+        background: #343a40;
+        color: #fff;
+        transition: all 0.3s;
+        position: fixed;
+        height: 100%;
+        left: -250px;
+        z-index: 1000;
+      }
+      #sidebar.active {
+        left: 0;
+      }
+      #sidebar .sidebar-header {
+        padding: 20px;
+        background: #343a40;
+        text-align: center;
+      }
+      #sidebar ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b;
+      }
+      #sidebar ul p {
+        color: #fff;
+        padding: 10px;
+      }
+      #sidebar ul li a {
+        padding: 15px;
+        font-size: 1.2rem;
+        display: block;
+        color: #fff;
+        text-decoration: none;
+      }
+      #sidebar ul li a:hover {
+        color: #7386d5;
+        background: #fff;
+      }
+      #sidebar ul li.active > a,
+      a[aria-expanded="true"] {
+        color: #fff;
+        background: #6d7fcc;
+      }
+      .navbar {
+            padding: 10px 20px;
+            background: transparent;
+            border-bottom: none;
+        }
+        .navbar-toggler {
+            border: none;
+        }
+        .navbar-toggler:focus {
+            outline: none;
+        }
+        .navbar .logout-btn {
+            margin-left: auto;
+        }
+      #content {
+        width: 100%;
+        margin-left: 0;
+        transition: all 0.3s;
+        padding: 20px;
+        z-index: 500;
+      }
+      #content.active {
+        margin-left: 250px;
+      }
+      .navbar {
+        padding: 10px 20px;
+        background: transparent;
+        border-bottom: none;
+      }
+      .navbar-toggler {
+        border: none;
+      }
+      .navbar-toggler:focus {
+        outline: none;
+      }
+
+      /* Notification alert styling */
+      .alert {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1050;
+        width: auto;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 1rem;
+        display: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.3s ease-in-out;
+      }
+      .alert-success {
+        background-color: #28a745;
+        color: white;
+      }
+      .alert-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <h3>Admin Panel</h3>
+      </div>
+      <ul class="components">
+        <li><a href="dashboard.html"><i class="fas fa-chart-line"></i>  Dashboard</a></li>
+            <li><a href="villas.html"><i class="fas fa-eye"></i>  View Villas</a></li>
+            <li><a href="addsop.html"><i class="fas fa-file-alt"></i>  Add SOPs</a></li>
+            <li><a href="addoffers.html"><i class="fas fa-tags"></i>  Add Offers</a></li>
+            <li><a href="addformat.html"><i class="fas fa-file-code"></i>  Add Formats</a></li>
+            <li><a href="addscore.html"><i class="fas fa-trophy"></i>  Add Scores</a></li>
+      </ul>
+    </div>
+
+    <!-- Page Content -->
+    <div id="content">
+      <div class="container-fluid pt-4">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <button type="button" id="sidebarToggle" class="btn btn-info">
+            <i class="fas fa-align-left hamburger"></i>
+          </button>
+          <button type="button" class="btn btn-danger logout-btn" id="logoutButton">
+            <i class="fas fa-sign-out-alt"></i> 
+        </button>
+        </nav>
+        <div class="btn-toolbar justify-content-between mb-3">
+          <div class="btn-group">
+            <span id="lblMsg" class="text-danger"></span>
+          </div>
+        </div>
+        <div class="btn-toolbar justify-content-between mb-3">
+          <div class="btn-group">
+            <span id="lblMsg" class="text-danger"></span>
+          </div>           
+        </div>
+        
+        <h3 class="text-center">VILLA DETAILS</h3>
+        <div class="row mb-3 pt-sm-3">
+          <div class="col-md-12">
+            <table id="villaTable" class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Villa Name</th>
+                  <th>Location</th>
+                  <th>Region</th>
+                  <th>USP</th>
+                  <th>Bedrooms</th>
+                  <th>Beds</th>
+                  <th>Bedroom/bed Config</th>
+                  <th>Bathrooms</th>
+                  <th>Guests</th>
+                  <th>Guest Staff</th>
+                  <th>Pool Config</th>
+                  <th>Speakers</th>
+                  <th>Nearby Restaurants</th>
+                  <th>Nearby Things to Do</th>
+                  <th>Nearby Villas</th>
+                  <th>Nearby Beaches</th>
+                  <th>Pet Friendly</th>
+                  <th>Senior Citizen Friendly</th>>
+                  <th>Spa</th>
+                  <th>Board Games</th>
+                  <th>House Rules</th>
+                  <th>Google Map</th>
+                  <th>Other Info</th>
+                  <th>Publish/Unpublish</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody id="villasContainer">
+                <!-- Villa data will be inserted here dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Are you sure?</h5>
+            <button>
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Do you really want to delete this villa? This process cannot be
+              undone.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button>
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              Cancel
+            </button>
+            <button type="button" id="confirmDelete" class="btn btn-danger">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Alert -->
+    <div id="notification" class="alert alert-success" role="alert">
+      Villa deleted successfully.
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Toggle sidebar visibility
+        $("#sidebarToggle").click(function () {
+          $("#sidebar").toggleClass("active");
+          $("#content").toggleClass("active");
+        });
+        let villaIdToDelete;
+
+        fetchVillas();
+
+        function fetchVillas() {
+          $.get("/villas", function (data) {
+            $("#villasContainer").empty();
+            data.forEach(function (villa) {
+              const publishButton = villa.published
+              ? `<button class="btn btn-warning btn-icon" onclick="togglePublish(${villa.id}, false)">Unpublish</button>`
+              : `<button class="btn btn-success btn-icon" onclick="togglePublish(${villa.id}, true)">Publish</button>`;
+              const villaHtml = `
+                            <tr>
+                                <td>${villa.id}</td>
+                                <td>${villa.villa_name}</td>
+                                <td>${villa.location}</td>
+                                <td>${villa.region}</td>
+                                <td>${villa.usp}</td>
+                                <td>${villa.num_bedrooms}</td>
+                                <td>${villa.num_beds}</td>
+                                <td>${villa.bed_config}</td>
+                                <td>${villa.num_bathrooms}</td>
+                                <td>${villa.num_guests}</td>
+                                <td>${villa.num_guest_staff}</td>
+                                <td>${villa.pool_config}</td>
+                                <td>${villa.speakers_with_brand}</td>
+                                <td>${villa.nearby_restaurants}</td>
+                                <td>${villa.nearby_things_to_do}</td>
+                                <td>${villa.nearby_villas}</td>
+                                <td>${villa.nearby_beaches}</td>
+                                <td>${villa.pet_friendly}</td>
+                                <td>${villa.senior_citizen_friendly}</td>
+                                <td>${villa.spa }</td>
+                                <td>${villa.board_games}</td>
+                                <td class="house-rules-cell">
+                                    <div class="house-rules-content">${
+                                      villa.house_rules
+                                    }</div>
+                                </td>
+                                <td><a href="${
+                                  villa.google_map
+                                }" target="_blank">Map</a></td>
+                                <td class="other-info-cell">
+                                    <div class="other-info-content">${
+                                      villa.other_info
+                                    }</div>
+                                </td>
+                                <td>
+                                <button class="btn btn-link btn-icon" onclick="togglePublish(${villa.id}, ${villa.is_published})">
+                                <i class="fas fa-${villa.is_published ? 'eye-slash' : 'eye'}"></i>
+                                ${villa.is_published ? 'Unpublish' : 'Publish'}
+                                </button></td>
+                                <td>
+                                    <button class="btn btn-link btn-icon" onclick="editVilla(${
+                                      villa.id
+                                    })">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-link btn-icon" onclick="showConfirmModal(${
+                                      villa.id
+                                    })">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+              $("#villasContainer").append(villaHtml);
+            });
+            $("#villaTable").DataTable({
+              pageLength: 10,
+              lengthChange: false,
+            });
+          });
+        }
+        // Function to toggle villa publish status
+window.togglePublish = function (id, currentStatus) {
+    const newStatus = currentStatus ? 0 : 1; // Toggle status
+    $.ajax({
+        url: `/villas/${id}/publish`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ isPublished: newStatus }),
+        success: function () {
+            $("#villaTable").DataTable().destroy();
+            fetchVillas(); // Refresh the list
+
+            // Show success notification
+            $("#notification")
+              .removeClass("alert-danger")
+              .addClass("alert-success")
+              .text(newStatus ? "Villa published successfully." : "Villa unpublished successfully.")
+              .show()
+              .delay(3000)
+              .fadeOut();
+        },
+        error: function () {
+            // Show error notification
+            $("#notification")
+              .removeClass("alert-success")
+              .addClass("alert-danger")
+              .text("Error updating villa status")
+              .show()
+              .delay(3000)
+              .fadeOut();
+        }
+    });
+};
+
+        window.showConfirmModal = function (id) {
+          villaIdToDelete = id;
+          $("#confirmModal").modal("show");
+        };
+
+        $("#confirmDelete").click(function () {
+          deleteVilla(villaIdToDelete);
+          $("#confirmModal").modal("hide");
+        });
+
+        window.deleteVilla = function (id) {
+    $.ajax({
+        url: `/delete_villa/${id}`,
+        type: "DELETE",
+        success: function (result) {
+            $("#villaTable").DataTable().destroy();
+            fetchVillas(); // Refresh the list
+
+            // Show success notification
+            $("#notification")
+                .removeClass("alert-danger")
+                .addClass("alert-success")
+                .text("Villa deleted successfully.")
+                .show()
+                .delay(3000)
+                .fadeOut();
+        },
+        error: function (xhr) {
+            $("#notification")
+                .removeClass("alert-success")
+                .addClass("alert-danger")
+                .text("Error deleting villa")
+                .show()
+                .delay(3000)
+                .fadeOut();
+        }
+    });
+};
+
+
+        window.editVilla = function (id) {
+          // Check if id is valid and then redirect
+          if (id) {
+            window.location.href = `editvilla.html?id=${id}`;
+          } else {
+            alert("Invalid villa ID");
+          }
+        };
+      });
+      // Function to handle logout
+function logout() {
+    // Clear any session data (if stored in sessionStorage or localStorage)
+    sessionStorage.clear();
+    localStorage.clear();
+
+    // Make a request to the server to destroy the session
+    fetch('/logout', {
+        method: 'POST',
+    }).then(() => {
+        // Redirect to index.html after session is cleared
+        window.location.href = '/index.html';
+    });
+}
+
+// Attach logout function to the logout button
+document.getElementById('logoutButton').addEventListener('click', logout);
+
+// Function to start the logout timer (1 minute of inactivity)
+function startLogoutTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(logout, 180000); // 1 minute = 60000 milliseconds
+}
+
+// Event listener to reset the timer on user activity
+window.onmousemove = startLogoutTimer;
+window.onkeydown = startLogoutTimer;
+
+// Start the logout timer immediately when the page loads
+let logoutTimer = setTimeout(logout, 180000);
+
+// Prevent back navigation after logout
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function() {
+    window.history.pushState(null, "", window.location.href);
+};
+
+    </script>
+    
+  </body>
+</html>

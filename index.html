@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Lohono Stays | Isprava</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.png" sizes="any" type="image/svg+xml"> 
+    
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    
+
+    <!-- Custom Script for Login/Logout -->
+    <script src="js/auth.js"></script>
+    <style>
+        /* Custom styles for the specific offer carousel dots */
+        .my-offer-carousel .owl-dots {
+            text-align: center;
+            margin-top: 20px; /* Adjust the margin as needed */
+            position: relative;
+        }
+    
+        .my-offer-carousel .owl-dot {
+            display: inline-block;
+            margin: 5px;
+            width: 12px;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 50%;
+        }
+    
+        .my-offer-carousel .owl-dot.active {
+            background-color: #007bff; 
+        }
+        .search-input {
+        width: 200px; 
+        height: 54px;
+    }
+    .large-select {
+        width: 200px; 
+        height: 54px; 
+        font-size: 1rem; 
+    }
+    .btn.same-size {
+        border-radius: 0.375rem; 
+        font-size: 1rem; 
+        padding: 0 1rem; 
+        height: 54px;
+    }
+    .suggestions-list {
+                position: absolute;
+                z-index: 1000;
+                background-color: white;
+                border: 1px solid #ddd;
+                max-height: 200px;
+                overflow-y: auto;
+                width: 100%;
+            }
+            .suggestions-list li {
+                cursor: pointer;
+                padding: 8px;
+            }
+            .suggestions-list li:hover {
+                background-color:lightgray;
+            }
+            .option:hover{
+                background-color: lightgray;
+            }
+            /* Default button style */
+#searchButton {
+    background-color: #0E2E50;
+    border: #0E2E50;
+    color: white; /* Ensures text color is white */
+}
+
+/* Icon inside the button */
+#searchButton i {
+    color: white; /* Icon color is white by default */
+}
+
+/* Change button and icon color on click */
+#searchButton:active,
+#searchButton:focus {
+    background-color: #ffffff; /* Button background changes to white */
+    border-color: #ffffff; /* Border changes to white */
+}
+
+#searchButton:active i,
+#searchButton:focus i {
+    color: #0E2E50; /* Icon color changes to original button color */
+}
+.container-xl {
+    max-width: 1000px; /* Narrower container for a more compact look */
+    margin: 0 auto; /* Center align the container */
+}
+
+.ticket {
+    display: flex;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 16px; /* Rounded edges for a ticket-like appearance */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    margin: 20px 0;
+    position: relative;
+}
+
+.discount {
+    background-color: #d32f2f;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    width: 100px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 16px; /* Match with the overall ticket radius */
+    border-bottom-left-radius: 16px; /* Match with the overall ticket radius */
+}
+
+.details {
+    padding: 20px;
+    flex: 1;
+    position: relative;
+}
+
+.title {
+    margin: 0;
+    font-size: 24px;
+    color: #0E2E50;
+    font-weight: bold;
+}
+
+.valid-until {
+    margin: 10px 0 0;
+    color: #373535;
+}
+
+.ticket::before,
+.ticket::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ticket::before {
+    left: -10px; /* Position to the left */
+}
+
+.ticket::after {
+    right: -10px; /* Position to the right */
+}
+.nav-item.dropdown .dropdown-menu .dropdown-item:hover {
+    color: #da6540; /* Change color on hover */
+}       
+    </style>
+    
+    <script>
+        $(function(){
+            $('#navbar').load('navbar.html');
+        });
+    </script>
+    
+</head>
+
+<body>
+    <div> <!-- Navbar Start -->
+        <div class="container-xxxl bg-white p-0">
+           <div class="container-fluid nav-bar bg-transparent">
+           <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+               <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
+                   <div class="">
+                       <img src="/img/logo.png" alt="Icon" style="width: 180px; height: 59px; border: none;">
+                   </div>
+                   <h1 class="m-0 text-primary"></h1>
+               </a>
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                   <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarCollapse">
+                   <ul class="navbar-nav ms-auto align-items-center">
+                       <li class="nav-item active">
+                           <a class="nav-link" href="/index.html">Home</a>
+                       </li>
+                       <li class="nav-item">
+                           <a class="nav-link" href="/sop.html">SOP's</a>
+                       </li>
+       
+                       <li class="nav-item active">
+                        <a class="nav-link" href="/Format.html">Formats</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/offers.html">Offers</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link " data-bs-toggle="dropdown" aria-expanded="false">
+                            T&C <i class="fa fa-chevron-down"></i> 
+                        </a>
+                        <ul class="dropdown-menu rounded-0 m-0">
+                            <li><a class="dropdown-item" href="/houserules.html">House Rules</a></li>
+                            <li><a class="dropdown-item" href="/policies.html">Privacy Policy</a></li> 
+                        </ul>
+                    </li>                    
+                    
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/leaderboard.html">Leaderboard</a>
+                    </li>
+
+                       <li class="nav-item">
+                           <a>
+                               <button id="loginLogoutButton" type="button" class="btn btn-primary px-3 d-none d-lg-flex" onclick="toggleLoginModal()"><i class="fas fa-user"></i></button>
+                           </a>
+                       </li>
+                   </ul>
+               </div>
+           </nav>
+       </div>
+       </div>
+       <!-- Navbar End -->
+       
+        </div>
+    
+ 
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h3>Login</h3>
+        <form class="login-form" onsubmit="return validateLogin()">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button class="btn btn-primary" type="submit" >Login</button>
+        </form>
+        <div id="message" class="error-message">Invalid username or password</div>
+        <div id="success-message" class="success-message">Login successful!</div>
+ </div>
+</div>
+        <!-- Header Start -->
+        <div class="header bg-white p-0">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-6 p-5 mt-lg-5">
+                    <h1 class="display-5 animated fadeIn mb-4">Find <span class="text-primary">Handpicked homes,</span> 
+                        paired with unparalleled hospitality</h1>
+                </div>
+                <div class="col-md-6 animated fadeIn">
+                    <div class="owl-carousel header-carousel">
+                        <div class="owl-carousel-item">
+                            <img  src="img/noor.jpg" alt="" width="1000px" height="630px">
+                        </div>
+                        <div class="owl-carousel-item">
+                            <img src="img/casatanisa.jpg" alt="" width="1000px" height="630px">
+                        </div>
+                        <div class="owl-carousel-item">
+                            <img  src="img/Cottage.jpg" alt="" width="1000px" height="630px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->  
+    </head>
+    <body>
+
+<!-- Search start -->
+<div class="container-fluid bg-primary mb-5 shadow-container" style="padding: 15px; top: 500px;">
+    <div class="container">
+        <div class="row g-2 justify-content-center" style="margin-top: 8px;">
+            <div class="col-md-12 d-flex flex-column">
+                <!-- Search Input and Filters -->
+                <div class="d-flex align-items-center mb-3">
+                    <!-- Search Input -->
+                    <div class="input-group flex-grow-1 me-2">
+                        <input type="text" id="searchKeyword" class="form-control large-select same-size" placeholder="Search Keyword" onkeyup="debounceSearch()">
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="btn-group mx-2">
+                        <button class="btn btn-outline same-size" type="button" id="petFriendlyButton" title="Pet Friendly" style="font-size: 1rem; background-color: #ffffff;">
+                            <img src="img/paw.svg" alt="Pet Friendly Icon" style="width: 24px; height: 24px; vertical-align: middle;">
+                        </button>
+                    </div>
+                    <div class="btn-group mx-2">
+                        <button class="btn btn-outline same-size" type="button" id="seniorCitizenFriendlyButton" title="Senior Citizen Friendly" style="font-size: 1rem; background-color: #ffffff;">
+                            <img src="img/senior.svg" alt="Senior Citizen Icon" style="width: 30px; height: 30px; vertical-align: middle;">
+                        </button>
+                    </div>
+                    
+                    <!-- Region and Location Selectors -->
+                    <div class="d-flex align-items-center ms-2">
+                        <select id="region" class="form-select large-select border-0 py-3 me-2" onchange="populateLocations()">
+                            <option value="" selected>Select Region</option>
+                            <option value="North">North</option>
+                            <option value="South">South</option>
+                            <option value="East">East</option>
+                            <option value="West">West</option>
+                            <option value="International">International</option>
+                        </select>
+                        <select id="location" class="form-select large-select border-0 py-3 me-2" >
+                            <option value="">Select Location</option>
+                            <!-- Add options dynamically or statically -->
+                        </select>
+                    </div>
+
+                    <!-- Search Button -->
+                    <button class="btn btn-primary same-size ms-2" id="searchButton" style="background-color: #0E2E50; border: #0E2E50;"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Search End -->
+
+
+    
+    <!-- Include your JavaScript file here -->
+    <script src="main.js"></script>
+</body>
+</html>
+<!--------------------------------------------------------------------------------------------------------------------------------->
+        <!-- About Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                            <img class="img-fluid w-100" src="img/glasshouseindex.jpg">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                        <h1 class="mb-4">Luxury and service in a glass front coastal retreat</h1>
+                        <p class="mb-4">Glasshouse On The Bay offers stunning sea views from every room in a contemporary, glass-fronted home in Chapora, North Goa, featuring three ensuite bedrooms, two living areas, a deck, balcony, and pool. Enjoy serene al fresco dining, vibrant nearby beaches, and Goa's lively nightlife.</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Seaside elegance, unparalleled comfort</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Indulge in oceanfront serenity</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Where luxury meets the sea</p>
+                        <a class="btn btn-primary py-3 px-5 mt-3" href="/villas/136.html">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About End -->
+
+
+<!-- Villa Offers -->
+<div class="container-xxl py-5">
+    <div class="container-xl"> <!-- Adjust the width of this container -->
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h1 class="mb-3">Exclusive Deals</h1>
+            <p>"Unlock Exclusive Deals for Your Dream Getaway!"</p>
+        </div>
+        <div class="owl-carousel offer-carousel my-offer-carousel wow fadeInUp" data-wow-delay="0.1s">
+            <!-- Example of one offer -->
+            <div class="ticket">
+                <div class="discount">30 OFF</div>
+                <div class="details">
+                    <h2 class="title">Luxury Villa Stay</h2>
+                    <p class="valid-until">Valid until: 31st Dec 2024</p>
+                </div>
+            </div>
+            <!-- Repeat for more offers -->
+        </div>
+    </div>
+</div>
+<!-- Villa Offer End -->
+
+
+
+<!-- JavaScript to Fetch and Display Offers -->
+<script>
+    $(document).ready(function() {
+        // Function to format date to dd MMM yyyy (no time)
+        function formatDate(dateString) {
+            if (!dateString) return "Invalid Date";
+            var date = new Date(dateString);
+            if (isNaN(date)) return "Invalid Date";
+    
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = months[date.getMonth()];
+            var year = date.getFullYear();
+            
+            return `${day} ${month} ${year}`;
+        }
+    
+        function loadOffers() {
+    $.get('/activeoffers', function(data) {
+        var offerCarousel = $('.offer-carousel');
+        offerCarousel.empty(); // Clear existing items
+
+        if (data.length === 0) {
+            // No active offers, display a centered image and message
+            var noOffersImage = `
+            <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
+                <img src="/img/offer_error.svg" alt="No Active Offers" width="500" height="250"/>
+            </div>
+            `;
+            offerCarousel.append(noOffersImage);
+            return;
+        }
+
+        // Sort the offers by discount value in descending order
+        data.sort(function(a, b) {
+            return parseInt(b.OfferDiscount) - parseInt(a.OfferDiscount);
+        });
+
+        // Take the top 3 offers
+        var topOffers = data.slice(0, 3);
+
+        topOffers.forEach(function(offer) {
+            var formattedDate = formatDate(offer.ValidUntil);
+            var offerItem = `
+            <div class="container-xl">
+                <a href="/offers.html" class="offer-link">
+                    <div class="ticket">
+                        <div class="discount">${offer.OfferDiscount} OFF</div>
+                        <div class="details">
+                            <h2 class="title">${offer.OfferTitle}</h2>
+                            <p class="valid-until">Valid until: ${formattedDate}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            `;
+            offerCarousel.append(offerItem);
+        });
+
+                // Reinitialize the carousel after dynamically adding items
+                offerCarousel.trigger('destroy.owl.carousel'); // Destroy the existing carousel
+                offerCarousel.owlCarousel({
+                    autoplay: true,
+                    smartSpeed: 1000,
+                    margin: 24,
+                    dots: true,  // Enable dots
+                    loop: true,
+                    nav: false,
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        992: {
+                            items: 2
+                        }
+                    }
+                });
+            }).fail(function() {
+                console.error('Failed to load offers.');
+            });
+        }
+    
+        // Initialize the empty carousel
+        $('.offer-carousel').owlCarousel({
+            autoplay: true,
+            smartSpeed: 1000,
+            margin: 24,
+            dots: true,  // Enable dots
+            loop: true,
+            nav: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                992: {
+                    items: 2
+                }
+            }
+        });
+    
+        // Load offers on page load
+        loadOffers();
+    });
+    </script>
+    
+
+<!-- Owl Carousel CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="loadFooter.js"></script>
+</body>
+
+
+</html>

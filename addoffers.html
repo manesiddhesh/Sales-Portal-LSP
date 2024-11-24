@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Offer</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      /* Sidebar styles */
+      #sidebar {
+        min-width: 250px;
+        max-width: 250px;
+        background: #343a40;
+        color: #fff;
+        transition: all 0.3s;
+        position: fixed;
+        height: 100%;
+        left: -250px;
+        z-index: 1000;
+      }
+      #sidebar.active {
+        left: 0;
+      }
+      #sidebar .sidebar-header {
+        padding: 20px;
+        background: #343a40;
+        text-align: center;
+      }
+      #sidebar ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b;
+      }
+      #sidebar ul p {
+        color: #fff;
+        padding: 10px;
+      }
+      #sidebar ul li a {
+        padding: 15px;
+        font-size: 1.2rem;
+        display: block;
+        color: #fff;
+        text-decoration: none;
+      }
+      #sidebar ul li a:hover {
+        color: #7386d5;
+        background: #fff;
+      }
+      #sidebar ul li.active > a,
+      a[aria-expanded="true"] {
+        color: #fff;
+        background: #6d7fcc;
+      }
+      .navbar {
+        padding: 10px 20px;
+        background: transparent;
+        border-bottom: none;
+      }
+      .navbar-toggler {
+        border: none;
+      }
+      .navbar-toggler:focus {
+        outline: none;
+      }
+      .navbar .logout-btn {
+        margin-left: auto;
+      }
+      #content {
+        width: 100%;
+        margin-left: 0;
+        transition: all 0.3s;
+        padding: 20px;
+      }
+      #content.active {
+        margin-left: 250px; /* Space for the sidebar */
+      }
+      .btn-info {
+        border: none;
+      }
+
+      /* Notification styles */
+      #notification {
+        display: none; /* Hidden by default */
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #28a745; /* Default green background for success */
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <h3>Admin Panel</h3>
+      </div>
+      <ul class="components sidebar_menu">
+        <li><a href="dashboard.html"><i class="fas fa-chart-line"></i>  Dashboard</a></li>
+        <li><a href="villas.html"><i class="fas fa-eye"></i>  View Villas</a></li>
+        <li><a href="addsop.html"><i class="fas fa-file-alt"></i>  Add SOPs</a></li>
+        <li><a href="addoffers.html"><i class="fas fa-tags"></i>  Add Offers</a></li>
+        <li><a href="addformat.html"><i class="fas fa-file-code"></i>  Add Formats</a></li>
+        <li><a href="addscore.html"><i class="fas fa-trophy"></i>  Add Scores</a></li>
+    </ul>
+    </div>
+    <div id="content">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <button type="button" id="sidebarToggle" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+        </button>
+        <button type="button" class="btn btn-danger logout-btn" id="logoutButton">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </nav>
+      <div class="container">
+        <h2 class="text-center"><strong>Add Offer</strong></h2>
+        <form
+          id="offerForm"
+          action="/upload_offer"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label for="OfferTitle">Offer Title:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="OfferTitle"
+              name="OfferTitle"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="OfferDescription">Offer Description:</label>
+            <textarea
+              class="form-control"
+              id="OfferDescription"
+              name="OfferDescription"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="OfferDiscount">Offer Discount:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="OfferDiscount"
+              name="OfferDiscount"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="ValidUntil">Valid Until:</label>
+            <input
+              type="date"
+              class="form-control"
+              id="ValidUntil"
+              name="ValidUntil"
+              max="2099-12-31"
+              required
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="OfferImage">Upload Image:</label>
+            <input
+              type="file"
+              class="form-control-file"
+              id="OfferImage"
+              name="OfferImage"
+              accept="image/*"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <h3 class="text-center mt-5"><strong>Current Offers</strong></h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Offer Title</th>
+              <th>Offer Description</th>
+              <th>Discount</th>
+              <th>Created At</th>
+              <th>Valid Until</th>
+              <th>Image</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="offerTableBody">
+            <!-- Offers will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification"></div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#sidebarToggle").click(function () {
+          $("#sidebar").toggleClass("active");
+          $("#content").toggleClass("active");
+        });
+
+        // Function to format date to dd MMM yyyy T hh:mm:ss (with time)
+        function formatDateTime(dateString) {
+          if (!dateString) return "Invalid Date";
+          var date = new Date(dateString); 
+          if (isNaN(date)) return "Invalid Date"; 
+
+          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          var day = ("0" + date.getDate()).slice(-2);
+          var month = months[date.getMonth()];
+          var year = date.getFullYear();
+          var hours = ("0" + date.getHours()).slice(-2);
+          var minutes = ("0" + date.getMinutes()).slice(-2);
+          var seconds = ("0" + date.getSeconds()).slice(-2);
+          
+          return `${day} ${month} ${year} T ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Function to format date to dd MMM yyyy (no time)
+        function formatDate(dateString) {
+          if (!dateString) return "Invalid Date";
+          var date = new Date(dateString); 
+          if (isNaN(date)) return "Invalid Date"; 
+
+          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          var day = ("0" + date.getDate()).slice(-2);
+          var month = months[date.getMonth()];
+          var year = date.getFullYear();
+          
+          return `${day} ${month} ${year}`;
+        }
+
+        // Function to fetch and display offers
+        function loadOffers() {
+          $.get("/offers")
+            .done(function (data) {
+              var tableBody = $("#offerTableBody");
+              tableBody.empty(); 
+              data.forEach(function (offer) {
+                var formattedCreatedAt = formatDateTime(offer.CreatedAt); // Format CreatedAt date and time
+                var formattedValidUntil = formatDate(offer.ValidUntil); // Format ValidUntil date only
+                var statusButton = offer.IsActive ? 
+                  `<button class="btn btn-warning btn-sm" data-id="${offer.OfferID}" data-status="deactivate">Deactivate</button>` :
+                  `<button class="btn btn-success btn-sm" data-id="${offer.OfferID}" data-status="activate">Activate</button>`;
+
+                var row = `<tr>
+                              <td>${offer.OfferTitle}</td>
+                              <td>${offer.OfferDescription}</td>
+                              <td>${offer.OfferDiscount}</td>
+                              <td>${formattedCreatedAt}</td>
+                              <td>${formattedValidUntil}</td>
+                              <td><img src="${offer.OfferImage}" alt="Offer Image" style="width: 100px; height: auto;"></td>
+                              <td>${statusButton}</td>
+                              <td>
+                                <button class="btn btn-danger btn-sm" data-id="${offer.OfferID}">Delete</button>
+                              </td>
+                            </tr>`;
+                tableBody.append(row);
+              });
+            })
+            .fail(function () {
+              console.error("Failed to fetch offers.");
+            });
+        }
+
+          // Set the min attribute to today's date
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById("ValidUntil").setAttribute("min", today);
+
+        // Load offers on page load
+        loadOffers();
+
+        // Handle form submission
+        $("#offerForm").on("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          var formData = new FormData(this);
+          $.ajax({
+            url: $(this).attr("action"),
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+              loadOffers(); // Reload offers after successful upload
+              $("#offerForm")[0].reset(); // Reset the form
+              showNotification("Offer added successfully!", "success");
+            },
+            error: function (xhr, status, error) {
+              console.error("Failed to upload offer:", error);
+              showNotification(
+                "An error occurred while uploading the offer. Please try again.",
+                "error"
+              );
+            },
+          });
+        });
+
+        // Handle offer deletion
+        $("#offerTableBody").on("click", ".btn-danger", function () {
+          var offerId = $(this).data("id");
+          if (confirm("Are you sure you want to delete this offer?")) {
+            $.ajax({
+              url: `/delete_offer/${offerId}`,
+              type: "DELETE",
+              success: function () {
+                loadOffers(); // Reload offers after successful deletion
+                showNotification("Offer deleted successfully!", "success");
+              },
+              error: function (xhr, status, error) {
+                console.error("Failed to delete offer:", error);
+                showNotification(
+                  "An error occurred while deleting the offer. Please try again.",
+                  "error"
+                );
+              },
+            });
+          }
+        });
+
+        // Handle offer status toggle
+        $("#offerTableBody").on("click", "button[data-status]", function () {
+          var offerId = $(this).data("id");
+          var status = $(this).data("status");
+          var url = status === "activate" ? `/activate_offer/${offerId}` : `/deactivate_offer/${offerId}`;
+          
+          $.ajax({
+            url: url,
+            type: "PUT",
+            success: function () {
+              loadOffers(); // Reload offers after successful status change
+              showNotification(`Offer ${status}d successfully!`, "success");
+            },
+            error: function (xhr, status, error) {
+              console.error(`Failed to ${status} offer:`, error);
+              showNotification(
+                `An error occurred while ${status} the offer. Please try again.`,
+                "error"
+              );
+            },
+          });
+        });
+
+        // Show notification
+        function showNotification(message, type) {
+          var $notification = $("#notification");
+          var bgColor = type === "success" ? "#28a745" : "#dc3545"; // Green for success, red for error
+
+          $notification
+            .text(message)
+            .css("background", bgColor)
+            .fadeIn(400)
+            .delay(3000)
+            .fadeOut(400);
+        }
+      });
+
+      // Function to handle logout
+      function logout() {
+            // Clear any session data (if stored in sessionStorage or localStorage)
+            sessionStorage.clear();
+            localStorage.clear();
+
+            // Make a request to the server to destroy the session
+            fetch('/logout', {
+                method: 'POST',
+            }).then(() => {
+                // Redirect to index.html after session is cleared
+                window.location.href = '/index.html';
+            });
+        }
+
+        // Attach logout function to the logout button
+        document.getElementById('logoutButton').addEventListener('click', logout);
+
+        // Function to start the logout timer (1 minute of inactivity)
+        function startLogoutTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(logout, 180000); // 3 minutes = 180000 milliseconds
+        }
+
+        // Event listener to reset the timer on user activity
+        window.onmousemove = startLogoutTimer;
+        window.onkeydown = startLogoutTimer;
+
+        // Start the logout timer immediately when the page loads
+        let logoutTimer = setTimeout(logout, 180000);
+
+        // Prevent back navigation after logout
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
+  </body>
+</html>

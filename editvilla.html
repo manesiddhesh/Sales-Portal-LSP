@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin - Villa Form</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        
+        <style>
+            body {
+                background-color: #e9ecef;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px;
+            }
+    
+            .container {
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                max-width: 1200px;
+                width: 100%;
+            }
+    
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #dca246 ;
+                font-size: 40px;
+                
+            }
+    
+            .form-row {
+                margin-bottom: 15px;
+            }
+    
+            .form-group {
+                margin-bottom: 0;
+            }
+    
+            .form-group label {
+                font-weight: bold;
+                color: #495057;
+            }
+    
+            .form-control, .form-control-select {
+                border-radius: 0.25rem;
+                border: 1px solid #ced4da;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+    
+            .form-control:focus, .form-control-select:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+            }
+    
+            .form-control, .form-control-select {
+                width: 100%;
+            }
+    
+            button[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                background-color: #28a745;
+                border: none;
+                border-radius: 5px;
+                color: #fff;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+    
+            button[type="submit"]:hover {
+                background-color: #218838;
+            }
+            
+    
+            .notification {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                color: #fff;
+                text-align: center;
+                width: 300px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                display: none;
+                z-index: 1000;
+            }
+    
+            .notification.success {
+                background-color: #28a745;
+            }
+    
+            .notification.error {
+                background-color: #dc3545;
+            }
+    
+            #sidebar {
+                min-width: 250px;
+                max-width: 250px;
+                background: #343a40;
+                color: #fff;
+                transition: all 0.3s;
+                position: fixed;
+                height: 100%;
+                left: -250px;
+                top: 0%;
+            }
+            #sidebar.active {
+                left: 0;
+            }
+            #sidebar .sidebar-header {
+                padding: 20px;
+                background: #343a40;
+                text-align: center;
+                
+            }
+            #sidebar ul.components {
+                padding: 20px 0;
+                border-bottom: 1px solid #47748b;
+            }
+            #sidebar ul p {
+                color: #fff;
+                padding: 10px;
+            }
+            #sidebar ul li a {
+                padding: 15px;
+                font-size: 1.2rem;
+                display: block;
+                color: #fff;
+                text-decoration: none;
+            }
+            #sidebar ul li a:hover {
+                color: #7386d5;
+                background: #fff;
+            }
+            #sidebar ul li.active > a, a[aria-expanded="true"] {
+                color: #fff;
+                background: #6d7fcc;
+            }
+            
+            .navbar {
+                padding: 10px 20px;
+                background: transparent;
+                border-bottom: none;
+            }
+            .navbar-toggler {
+                border: none;
+            }
+            .navbar-toggler:focus {
+                outline: none;
+            }
+            .navbar .logout-btn {
+                margin-left: auto;
+            }
+            #content {
+                width: 100%;
+                margin-left: 0;
+                transition: all 0.3s;
+                padding: 20px;
+            }
+            #content.active {
+                margin-left: 250px;
+            }
+            .navbar {
+                padding: 10px 20px;
+                background: transparent;
+                border-bottom: none;
+            }
+            .navbar-toggler {
+                border: none;
+            }
+            .navbar-toggler:focus {
+                outline: none;
+            }
+            .btn-primary{
+                background-color: #28a745;
+                border-color: #28a745;
+            }
+            .btn-primary:hover{
+                background-color: #d32f2f;
+                border-color: #d32f2f;
+            }
+            
+        </style>
+    </head>
+<body>
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Panel</h3>
+        </div>
+        <ul class="components sidebar_menu">
+            <li><a href="dashboard.html"><i class="fas fa-chart-line"></i>  Dashboard</a></li>
+            <li><a href="villas.html"><i class="fas fa-eye"></i>  View Villas</a></li>
+            <li><a href="addsop.html"><i class="fas fa-file-alt"></i>  Add SOPs</a></li>
+            <li><a href="addoffers.html"><i class="fas fa-tags"></i>  Add Offers</a></li>
+            <li><a href="addformat.html"><i class="fas fa-file-code"></i>  Add Formats</a></li>
+            <li><a href="addscore.html"><i class="fas fa-trophy"></i>  Add Scores</a></li>
+        </ul>
+    </div>
+    
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light">
+        <button type="button" id="sidebarCollapse" class="btn btn-info hamburger" >
+            <i class="fas fa-align-left"></i>
+        </button>
+        <button type="button" class="btn btn-danger logout-btn" id="logoutButton">
+            <i class="fas fa-sign-out-alt"></i> 
+        </button>
+        </nav>
+    <div class="container">
+        <h1><strong> EDIT VILLA </strong></h1>
+        <form id="villaForm" enctype="multipart/form-data">
+            <input type="hidden" id="villaId" name="villa_id">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="villaName">Villa Name:</label>
+                    <input type="text" id="villaName" name="villa_name" class="form-control" required>
+                </div>
+                
+                <div class="form-group col-md-3">
+                    <label for="region">Region:</label>
+                    <select id="region" name="region" class="form-control">
+                        <option value="">Select</option>
+                        <option value="North">North</option>
+                        <option value="South">South</option>
+                        <option value="East">East</option>
+                        <option value="West">West</option>
+                        <option value="International">International</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="location">Location:</label>
+                    <select id="location" name="location" class="form-control" required>
+                        <option value="">Select</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="usp">Unique Selling Point (USP):</label>
+                    <textarea id="usp" name="usp" class="form-control" rows="1"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label for="numBedrooms">Bedrooms:</label>
+                    <input type="text" id="numBedrooms" name="num_bedrooms" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="numBeds">Beds:</label>
+                    <input type="text" id="numBeds" name="num_beds" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="bedConfig">Bedroom/Bed Config</label>
+                    <input type="text" id="bedConfig" name="bed_config" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="numBathrooms">Bathrooms:</label>
+                    <input type="text" id="numBathrooms" name="num_bathrooms" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="numGuests">Guests:</label>
+                    <input type="number" id="numGuests" name="num_guests" class="form-control" min="0" max="99">
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="numGuestStaff">Guest Staff:</label>
+                    <input type="number" id="numGuestStaff" name="num_guest_staff" class="form-control" min="0" max="99">
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="poolConfig">Pool Config:</label>
+                    <input type="text" id="poolConfig" name="pool_config" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="speakersWithBrand">Speakers with Brand:</label>
+                    <textarea id="speakersWithBrand" name="speakers_with_brand" class="form-control" rows="1"></textarea>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="nearbyRestaurants">Nearby Restaurants:</label>
+                    <textarea id="nearbyRestaurants" name="nearby_restaurants" class="form-control" rows="1"></textarea>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="nearbyThingsToDo">Nearby Things to Do:</label>
+                    <textarea id="nearbyThingsToDo" name="nearby_things_to_do" class="form-control" rows="1"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="nearbyVillas">Nearby Villas:</label>
+                    <textarea id="nearbyVillas" name="nearby_villas" class="form-control" rows="1"></textarea>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="nearbyBeaches">Nearby Beaches:</label>
+                    <textarea id="nearbyBeaches" name="nearby_beaches" class="form-control" rows="1"></textarea>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="petFriendly">Pet Friendly:</label>
+                    <input type="text" id="petFriendly" name="pet_friendly" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="seniorCitizenFriendly">Senior Citizen Friendly:</label>
+                    <select id="seniorCitizenFriendly" name="senior_citizen_friendly" class="form-control">
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="spa">Spa:</label>
+                    <select id="spa" name="spa" class="form-control">
+                        <option value="">Select</option>
+                        <option value="Available">Available</option>
+                        <option value="Not Available">Not Available</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="boardGames">Board Games:</label>
+                    <select id="boardGames" name="board_games" class="form-control">
+                        <option value="">Select</option>
+                        <option value="Available">Available</option>
+                        <option value="Not Available">Not Available</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="houseRules">House Rules:</label>
+                    <textarea id="houseRules" name="house_rules" class="form-control" rows="1"></textarea>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="googleMap">Google Map Link:</label>
+                    <input type="text" id="googleMap" name="google_map" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="villaImage">Villa Image:</label>
+                    <input type="file" id="villaImage" name="villa_image" class="form-control" accept="image/*">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="otherInfo">Other Information:</label>
+                <textarea id="otherInfo" name="other_info" class="form-control" rows="2"></textarea>
+            </div><br>
+
+            <button type="button" id="submitButton" class="btn btn-primary">Update Villa</button>
+        </form>
+    </div>
+</div>
+
+    <!-- Notification Popup -->
+    <div id="notificationPopup" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        // Toggle sidebar visibility
+        $("#sidebarCollapse").click(function () {
+          $("#sidebar").toggleClass("active");
+          $("#content").toggleClass("active");
+        });
+        const locationOptions = {
+        "North": ["Srinagar-Pahalgam", "Jim Corbett", "Jaipur", "Gurgaon", "Rishikesh", "Kasauli", "Mussoorie-Dehradun", "Pench"],
+        "South": ["Coonoor", "Coorg"],
+        "East": [],
+        "West": ["Goa", "Alibaug", "Lonavala-Khandala", "Mahabaleshwar", "Karjat"],
+        "International": ["Maldives", "Bali", "Phuket", "Koh Samui", "Sri Lanka"]
+    };
+
+    function updateLocations() {
+        const region = document.getElementById('region').value;
+        const locationSelect = document.getElementById('location');
+
+        // Clear current options
+        locationSelect.innerHTML = '<option value="">Select</option>';
+
+        // Populate new options
+        if (region && locationOptions[region]) {
+            locationOptions[region].forEach(location => {
+                const option = document.createElement('option');
+                option.value = location;
+                option.textContent = location;
+                locationSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Event listener for the region dropdown
+    document.getElementById('region').addEventListener('change', updateLocations);
+        $(document).ready(function () {
+            // Get villa ID from URL parameters
+            const params = new URLSearchParams(window.location.search);
+            const villaId = params.get('id');
+
+            if (villaId) {
+                // Fetch villa details from the server
+                $.get(`/api/villas/${villaId}`, function (villa) {
+                    // Populate form fields with fetched villa data
+                    $('#villaId').val(villa.id);
+            $('#villaName').val(villa.villa_name);
+            $('#location').val(villa.location);
+            $('#region').val(villa.region);
+            $('#usp').val(villa.usp);
+            $('#numBedrooms').val(villa.num_bedrooms);
+            $('#numBeds').val(villa.num_beds);
+            $('#bedConfig').val(villa.bed_config);
+            $('#numBathrooms').val(villa.num_bathrooms);
+            $('#numGuests').val(villa.num_guests);
+            $('#numGuestStaff').val(villa.num_guest_staff);
+            $('#poolConfig').val(villa.pool_config);
+            $('#speakersWithBrand').val(villa.speakers_with_brand);
+            $('#nearbyRestaurants').val(villa.nearby_restaurants);
+            $('#nearbyThingsToDo').val(villa.nearby_things_to_do);
+            $('#nearbyVillas').val(villa.nearby_villas);
+            $('#nearbyBeaches').val(villa.nearby_beaches);
+            $('#petFriendly').val(villa.pet_friendly);
+            $('#seniorCitizenFriendly').val(villa.senior_citizen_friendly);
+            $('#spa').val(villa.spa);
+            $('#boardGames').val(villa.board_games);
+            $('#houseRules').val(villa.house_rules);
+            $('#googleMap').val(villa.google_map);
+            $('#otherInfo').val(villa.other_info);
+
+                    $('#currentImage').attr('src', villa.villa_image ? villa.villa_image : '');
+
+                    // Handle additional fields here as needed
+                }).fail(function () {
+                    $('#notificationMessage').text('Error fetching villa details');
+                    $('#notificationPopup').addClass('error').fadeIn().delay(3000).fadeOut();
+                });
+            }
+
+            // Handle form submission
+            $('#submitButton').click(function () {
+                const formData = new FormData($('#villaForm')[0]);
+                $.ajax({
+                    url: `/api/villas/${$('#villaId').val()}`,
+                    type: 'PUT',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function () {
+                        $('#notificationMessage').text('Villa updated successfully!');
+                        $('#notificationPopup').removeClass('error').addClass('success').fadeIn().delay(3000).fadeOut();
+                        setTimeout(function () {
+                            window.location.href = 'villas.html';
+                        }, 3000);
+                    },
+                    error: function () {
+                        $('#notificationMessage').text('Error updating villa');
+                        $('#notificationPopup').removeClass('success').addClass('error').fadeIn().delay(3000).fadeOut();
+                    }
+                });
+            });
+                // Function to handle logout
+function logout() {
+    // Clear any session data (if stored in sessionStorage or localStorage)
+    sessionStorage.clear();
+    localStorage.clear();
+
+    // Make a request to the server to destroy the session
+    fetch('/logout', {
+        method: 'POST',
+    }).then(() => {
+        // Redirect to index.html after session is cleared
+        window.location.href = '/index.html';
+    });
+}
+
+// Attach logout function to the logout button
+document.getElementById('logoutButton').addEventListener('click', logout);
+
+// Function to start the logout timer (1 minute of inactivity)
+function startLogoutTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(logout, 180000); // 1 minute = 60000 milliseconds
+}
+
+// Event listener to reset the timer on user activity
+window.onmousemove = startLogoutTimer;
+window.onkeydown = startLogoutTimer;
+
+// Start the logout timer immediately when the page loads
+let logoutTimer = setTimeout(logout, 180000);
+
+// Prevent back navigation after logout
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function() {
+    window.history.pushState(null, "", window.location.href);
+};
+
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 16px; /* Increased base font size */
+        }
+
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+            position: fixed;
+            height: 100%;
+            left: -250px;
+        }
+
+        #sidebar.active {
+            left: 0;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #343a40;
+            text-align: center;
+            font-size: 1.5rem; /* Increased font size */
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #47748b;
+        }
+
+        #sidebar ul p {
+            color: #fff;
+            padding: 10px;
+        }
+
+        #sidebar ul li a {
+            padding: 15px; /* Increased padding */
+            font-size: 1.2em; /* Increased font size */
+            display: block;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #sidebar ul li a:hover {
+            color: #7386d5;
+            background: #fff;
+        }
+
+        #sidebar ul li.active > a, a[aria-expanded="true"] {
+            color: #fff;
+            background: #6d7fcc;
+        }
+
+        #content {
+            width: 100%;
+            margin-left: 0;
+            transition: all 0.3s;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #content.active {
+            margin-left: 250px;
+        }
+
+        .navbar {
+            padding: 10px 20px;
+            background: transparent;
+            border-bottom: none;
+            font-size: 1.2rem; /* Increased font size */
+        }
+
+        .navbar-toggler {
+            border: none;
+            font-size: 1.2rem; /* Increased font size */
+        }
+
+        .navbar-toggler:focus {
+            outline: none;
+        }
+
+        .navbar .logout-btn {
+            margin-left: auto;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 80vw;
+            height: 100vh;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            padding: 30px; /* Increased padding */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-container .chart-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem; /* Increased font size */
+            color: #000;
+        }
+
+        .chart-container .axis-label {
+            font-weight: bold;
+            font-size: 1.5rem; /* Increased font size */
+            color: #000;
+        
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Panel</h3>
+        </div>
+        <ul class="components sidebar_menu">
+            <!-- Sidebar menu items -->
+            <li><a href="dashboard.html"><i class="fas fa-chart-line"></i>  Dashboard</a></li>
+            <li><a href="villas.html"><i class="fas fa-eye"></i>  View Villas</a></li>
+            <li><a href="addsop.html"><i class="fas fa-file-alt"></i>  Add SOPs</a></li>
+            <li><a href="addoffers.html"><i class="fas fa-tags"></i>  Add Offers</a></li>
+            <li><a href="addformat.html"><i class="fas fa-file-code"></i>  Add Formats</a></li>
+            <li><a href="addscore.html"><i class="fas fa-trophy"></i>  Add Scores</a></li>
+        </ul>
+    </div>    
+
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <i class="fas fa-align-left hamburger"></i>
+            </button>
+            <button type="button" class="btn btn-danger logout-btn" id="logoutButton">
+                <i class="fas fa-sign-out-alt"></i> 
+            </button>
+        </nav>
+
+        <!-- Content area -->
+        <div class="container-fluid pt-4">
+            <div class="row">
+                <div class="col-12 pb-3">
+                    <h1 class="text-center" style="color: #dca246;"><strong>ADMIN DASHBOARD</strong></h1>
+                </div>
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <div class="chart-title">Villa Counts by Region</div>
+                        <canvas id="villaCountChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        $(document).ready(function () {
+            // Toggle sidebar
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+
+            // Logout button action
+            $('#logoutButton').on('click', function () {
+                window.location.href = 'index.html'; 
+            });
+
+            // Fetch villa counts and initialize the chart
+            $.get('/villa_counts')
+                .done(function (data) {
+                    console.log('Villa count data:', data); 
+
+                    // Create the bar chart
+                    var ctx = document.getElementById('villaCountChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['North', 'South', 'East', 'West', 'International', 'Pet Friendly', 'Senior Citizen'],
+                            datasets: [{
+                                label: 'Villa Count',
+                                data: [
+                                    data.north || 0,
+                                    data.south || 0,
+                                    data.east || 0,
+                                    data.west || 0,
+                                    data.international || 0,
+                                    data.pet_friendly || 0,
+                                    data.senior_citizen_friendly || 0
+                                ],
+                                backgroundColor: [
+                                    '#FF5733', // North
+                                    '#33FF57', // South
+                                    '#3357FF', // East
+                                    '#FF33A6', // West
+                                    '#FFCC33', // International
+                                    '#33FFF6', // Pet Friendly
+                                    '#A633FF'  // Senior Citizen
+                                ],
+                                borderColor: 'rgba(0, 0, 0, 0.1)', // Slight border for visibility
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (tooltipItem) {
+                                            const labels = [
+                                                'North',
+                                                'South',
+                                                'East',
+                                                'West',
+                                                'International',
+                                                'Pet Friendly',
+                                                'Senior Citizen'
+                                            ];
+                                            const index = tooltipItem.dataIndex;
+                                            const value = tooltipItem.raw;
+                                            return `${labels[index]} Count: ${value}`;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    display: true
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            weight: 'bold',    
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'REGION',
+                                        font: {
+                                            weight: 'bold'   
+                                        }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 5,
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'COUNT',
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error('Failed to fetch villa counts:', textStatus, errorThrown);
+                });
+
+            // Logout function and timer
+            function logout() {
+                sessionStorage.clear();
+                localStorage.clear();
+
+                fetch('/logout', {
+                    method: 'POST',
+                }).then(() => {
+                    window.location.href = '/index.html';
+                });
+            }
+
+            document.getElementById('logoutButton').addEventListener('click', logout);
+
+            function startLogoutTimer() {
+                clearTimeout(logoutTimer);
+                logoutTimer = setTimeout(logout, 180000); // 3 minute
+            }
+
+            window.onmousemove = startLogoutTimer;
+            window.onkeydown = startLogoutTimer;
+
+            let logoutTimer = setTimeout(logout, 180000);
+
+            function checkAuthentication() {
+                const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+                if (!isAuthenticated || isAuthenticated !== 'true') {
+                    window.location.href = '/index.html';
+                }
+            }
+
+            window.history.pushState(null, "", window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, "", window.location.href);
+                checkAuthentication();
+            };
+
+            checkAuthentication();
+
+            window.onload = function () {
+                if (!sessionStorage.getItem('isAuthenticated')) {
+                    window.location.href = '/index.html';
+                }
+            };
+        });
+    </script>
+
+</body>
+
+</html>
